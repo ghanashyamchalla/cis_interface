@@ -1,0 +1,4 @@
+doxygen  # conda
+breathe
+sphinx
+sphinx_rtd_theme

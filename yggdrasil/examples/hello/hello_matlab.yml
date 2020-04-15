@@ -1,0 +1,23 @@
+---
+
+model:
+  name: hello_matlab
+  language: matlab
+  args: ./src/hello.m  # Runs the matlab script using Matlab engine
+
+  inputs:
+    - inFile
+    - helloQueueIn
+  outputs:
+    - helloQueueOut
+    - outFile
+
+connections:
+  - input: ./Input/input.txt
+    output: inFile
+  - input: helloQueueOut
+    output: helloQueueIn
+    onexit: printStatus
+  - input: outFile
+    output: output_hello.txt
+    in_temp: True

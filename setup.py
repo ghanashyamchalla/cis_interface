@@ -1,37 +1,35 @@
 import os
 import sys
-import shutil
+import logging
 import warnings
 from setuptools import setup, find_packages
 from distutils.sysconfig import get_python_lib
 import versioneer
-import install_matlab_engine
 import create_coveragerc
-cis_ver = versioneer.get_version()
+ygg_ver = versioneer.get_version()
+ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+LANG_PATH = os.path.join(ROOT_PATH, 'yggdrasil', 'languages')
 
 
-# Attempt to install openalea
+# Import script from inside package
+sys.path.insert(0, LANG_PATH)
 try:
-    from openalea import lpy
-    lpy_installed = True
-except ImportError:
-    warnings.warn("Could not import openalea.lpy. " +
-                  "LPy support will be disabled.")
-    lpy_installed = False
+    import install_languages
+finally:
+    sys.path.pop(0)
 
 
-# Attempt to install matlab engine
-if install_matlab_engine.install_matlab(as_user=('--user' in sys.argv)):
-    matlab_installed = True
-else:
-    warnings.warn("Could not import matlab.engine. " +
-                  "Matlab features will be disabled.")
-    matlab_installed = False
+print("In setup.py", sys.argv)
+logging.critical("In setup.py: %s" % sys.argv)
+        
 
-    
-# Set coverage options in .coveragerc
-create_coveragerc.create_coveragerc(matlab_installed=matlab_installed,
-                                    lpy_installed=lpy_installed)
+# Don't do coverage or installation of packages for use with other languages
+# when building a source distribution
+if 'sdist' not in sys.argv:
+    # Attempt to install languages
+    installed_languages = install_languages.install_all_languages(from_setup=True)
+    # Set coverage options in .coveragerc
+    create_coveragerc.create_coveragerc(installed_languages)
 
 
 # Create .rst README from .md and get long description
@@ -51,15 +49,12 @@ else:
 
 
 # Create requirements list based on platform
-requirements = ['numpy>=1.13.0', "scipy", "pyyaml",
-                "pystache", "nose", "zmq", "psutil",
-                "matplotlib", "cerberus", "jsonschema",
-                'pandas<0.21; python_version == "3.4"',
-                'pandas; python_version != "3.4"',
-                "pint", "unyt",
-                'sysv_ipc; platform_system != "Windows"']
-test_requirements = ['pytest', 'nose']
-# optional_requirements = ["pika", "astropy"]
+with open("requirements.txt", 'r') as fd:
+    requirements = fd.read().splitlines()
+with open("requirements_testing.txt", 'r') as fd:
+    test_requirements = fd.read().splitlines()
+# with open("requirements_optional.txt", 'r') as fd:
+#     optional_requirements = fd.read().splitlines()
 
 
 # Warn that local install may not have entry points on path
@@ -68,47 +63,67 @@ if '--user' in sys.argv:
                                                '../../../bin/'))
     warnings.warn("When installing locally, you may need to add the script " +
                   "directory to your path manually in order to have access " +
-                  "to the command line entry points (e.g. cisrun). " +
-                  "If 'cisrun' is not a recognized command, try adding " +
+                  "to the command line entry points (e.g. yggrun). " +
+                  "If 'yggrun' is not a recognized command, try adding " +
                   "'%s' to your PATH." % script_dir)
     
+    
 setup(
-    name="cis_interface",
+    name="yggdrasil-framework",
     packages=find_packages(),
     include_package_data=True,
-    version=cis_ver,
+    version=ygg_ver,
     cmdclass=versioneer.get_cmdclass(),
     description=("A framework for combining interdependent models from "
                  "multiple languages."),
     long_description=long_description,
     author="Meagan Lang",
     author_email="langmm.astro@gmail.com",
-    url="https://github.com/cropsinsilico/cis_interface",
+    url="https://github.com/cropsinsilico/yggdrasil",
     download_url=(
-        "https://github.com/cropsinsilico/cis_interface/archive/%s.tar.gz" % cis_ver),
+        "https://github.com/cropsinsilico/yggdrasil/archive/%s.tar.gz" % ygg_ver),
     keywords=["plants", "simulation", "models", "framework"],
     install_requires=requirements,
     tests_require=test_requirements,
     classifiers=[
-        "Programming Language :: Python",
         "Programming Language :: C",
         "Programming Language :: C++",
         "Programming Language :: ML",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Operating System :: OS Independent",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",
         "Natural Language :: English",
         "Topic :: Scientific/Engineering",
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
     ],
     entry_points={
-        'console_scripts': ['cisrun=cis_interface.command_line:cisrun',
-                            'ciscc=cis_interface.command_line:ciscc',
-                            'cisccflags=cis_interface.command_line:cc_flags',
-                            'cisldflags=cis_interface.command_line:ld_flags',
-                            'cistest=cis_interface:run_nose',
-                            'cisschema=cis_interface.command_line:regen_schema',
-                            'cisconfig=cis_interface.command_line:update_config'],
+        'console_scripts': ['ygginfo=yggdrasil.command_line:ygginfo',
+                            'yggrun=yggdrasil.command_line:yggrun',
+                            'cisrun=yggdrasil.command_line:yggrun',
+                            'yggcc=yggdrasil.command_line:yggcc',
+                            'yggccflags=yggdrasil.command_line:cc_flags',
+                            'yggldflags=yggdrasil.command_line:ld_flags',
+                            'yggtest=yggdrasil:run_tsts',
+                            'yggmetaschema=yggdrasil.command_line:regen_metaschema',
+                            'yggschema=yggdrasil.command_line:regen_schema',
+                            'yggbuildapi_c=yggdrasil.command_line:rebuild_c_api',
+                            'yggconfig=yggdrasil.command_line:update_config',
+                            'yggtime_comm=yggdrasil.command_line:yggtime_comm',
+                            'yggtime_lang=yggdrasil.command_line:yggtime_lang',
+                            'yggtime_os=yggdrasil.command_line:yggtime_os',
+                            'yggtime_py=yggdrasil.command_line:yggtime_py',
+                            'yggtime_paper=yggdrasil.command_line:yggtime_paper',
+                            'yggvalidate=yggdrasil.command_line:validate_yaml',
+                            'ygginstall=yggdrasil.command_line:ygginstall',
+                            'yggclean=yggdrasil.command_line:yggclean',
+                            'yggmodelform=yggdrasil.command_line:yggmodelform'],
     },
     license="BSD",
+    python_requires='>=3.5',
 )

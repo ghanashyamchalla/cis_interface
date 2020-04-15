@@ -1,0 +1,23 @@
+---
+
+model:
+  name: hello_cpp
+  language: c++
+  args: ./src/hello.cpp
+
+  inputs:
+    - inFile
+    - helloQueueIn
+  outputs:
+    - helloQueueOut
+    - outFile
+
+connections:
+  - input: ./Input/input.txt
+    output: inFile
+  - input: helloQueueOut
+    output: helloQueueIn
+    onexit: printStatus
+  - input: outFile
+    output: output_hello.txt
+    in_temp: True

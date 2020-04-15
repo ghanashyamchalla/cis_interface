@@ -4,10 +4,10 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = cis_interface
+SPHINXPROJ    = yggdrasil
 SOURCEDIR     = source
 BUILDDIR      = build
-REPODIR       = ../../cis_interface_docs
+REPODIR       = ../../yggdrasil_docs
 DOXYDIR       = doxy
 
 # Put it first so that "make" without argument is like "make help".
@@ -16,22 +16,26 @@ help:
 
 .PHONY: help Makefile
 
-.PHONY: ghpages
+.PHONY: clean ghpages
 ghpages: autodoc
 
 	cp -a $(BUILDDIR)/html/. $(REPODIR)/
 	cd $(REPODIR) ; git pull ; git add . ; git commit -m "rebuilt docs" ; git push origin gh-pages
 
 .PHONY: autodoc
-autodoc: doxy
-	python $(SOURCEDIR)/examples/make_example_rst.py
-	sphinx-apidoc -fT -o $(SOURCEDIR)/ ../cis_interface # ../cis_interface/tests/* ../cis_interface/*/tests/*
-	mv $(SOURCEDIR)/cis_interface.rst $(SOURCEDIR)/cis_interface.inc
+autodoc: doxy scripts
+	sphinx-apidoc -fT -o $(SOURCEDIR)/ ../yggdrasil # ../yggdrasil/tests/* ../yggdrasil/*/tests/*
+	mv $(SOURCEDIR)/yggdrasil.rst $(SOURCEDIR)/yggdrasil.inc
 	make html
 
 .PHONY: doxy
 doxy:
 	cd $(DOXYDIR) ; doxygen doxy.cfg
+
+.PHONY: scripts
+scripts:
+	python $(SOURCEDIR)/examples/make_example_rst.py
+	python $(SOURCEDIR)/make_tables_rst.py
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

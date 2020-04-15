@@ -1,0 +1,5 @@
+model:
+  name: make_model
+  language: make
+  args: gcc_model
+  makefile: ../scripts/Makefile      

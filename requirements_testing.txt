@@ -1,0 +1,8 @@
+codecov
+coverage
+coveralls
+flake8
+flaky
+nose
+pytest
+pytest-cov

@@ -1,0 +1,23 @@
+IDIR = .
+CC ?= gcc
+CFLAGS += -I$(IDIR)
+
+ODIR = .
+
+LIBS = -lm $(LDFLAGS)
+
+.PHONY: all
+all: backwards_modelA backwards_modelB
+
+$(ODIR)/%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+backwards_modelA: $(ODIR)/backwards_modelA.o
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+backwards_modelB: $(ODIR)/backwards_modelB.o
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+.PHONY: clean
+clean:
+	rm -f $(ODIR)/*.o *~ backwards_modelA backwards_modelB $(IDIR)/*~ 

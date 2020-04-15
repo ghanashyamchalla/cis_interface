@@ -1,0 +1,27 @@
+IDIR = .
+# CC ?= cl.exe
+# CFLAGS += /I$(IDIR)
+CFLAGS = $(CFLAGS) /I$(IDIR)
+
+SDIR = .
+ODIR = .
+
+LIBS = $(LDFLAGS)
+
+.PHONY: all
+all: backwards_modelA backwards_modelB
+
+backwards_modelA: $(ODIR)\backwards_modelA.o
+	$(CC) /OUT:$@.exe $** /link $(LIBS)
+
+backwards_modelB: $(ODIR)\backwards_modelB.o
+	$(CC) /OUT:$@.exe $** /link $(LIBS)
+
+{$(SDIR)}.c{$(ODIR)}.o:
+	$(CC) /c $< -Fo$@ $(CFLAGS)
+
+{$(SDIR)}.cpp{$(ODIR)}.o:
+	$(CC) /c $< -Fo$@ $(CFLAGS)
+
+clean:
+	del $(ODIR)\*.o *~ backwards_modelA.exe backwards_modelB.exe $(IDIR)\*~ 

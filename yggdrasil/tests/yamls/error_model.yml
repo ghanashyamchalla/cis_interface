@@ -1,0 +1,6 @@
+model:
+  name: error_model
+  language: python
+  args:
+    - ../scripts/error_model.py
+      

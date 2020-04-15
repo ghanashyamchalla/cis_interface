@@ -1,21 +1,46 @@
 
 # Copies of test input files
-cis_interface/tests/scripts/gcc_model.out
-cis_interface/tests/scripts/Makefile
+yggdrasil/tests/scripts/gcc_model.out
+yggdrasil/tests/scripts/Makefile
+
+# Library things
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+yggdrasil/languages/C/stdint.h
 
 # Intermediate docs
 docs/build
+docs/source/cis_interface.inc
 docs/source/cis_interface*.rst
+docs/source/yggdrasil.inc
+docs/source/yggdrasil*.rst
 docs/source/modules.rst
 docs/source/examples/*.rst
+docs/source/tables
+
+# Dev setup
+requirements_pruned.txt
+
+# Profiling
+prof
 
 # Coverage
 .coveragerc
 .coverage
 htmlcov
+.coverage.*
+
+# Profiling
+prof
 
 # temp for storing notes, whatever, etc.   not managed
 tmp/
+
+# Cache
+.cache/
 
 # Temporary file copies
 *~
@@ -37,9 +62,17 @@ tmp/
 
 
 # Packaging things
+cis_interface
 cis_interface.egg-info
+yggdrasil.egg-info
+yggdrasil_framework.egg-info
 dist/
+build/
 
+# R things
+yggdrasil/languages/*.tar.gz
+yggdrasil/languages/*.RData
+yggdrasil/languages/*.RHistory
 
 # Windows image file caches
 Thumbs.db

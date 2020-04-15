@@ -1,0 +1,6 @@
+model:
+  name: matlab_model
+  language: matlab
+  args:
+    - ../scripts/matlab_model.m
+      

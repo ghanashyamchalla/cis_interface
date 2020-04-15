@@ -1,15 +1,16 @@
-|PyPI version| |Build Status| |Build status| |Coverage Status| |codecov|
-|PEP8|
+|tag version| |PyPI version| |Travis Build Status| |Appveyor Build status| 
+|codecov| |PEP8| |license| |platform|
 
-The CiS framework provides support for combining scientific models
+yggdrasil, originally created as a framework for the Crops in Silico (CiS) 
+project, provides support for combining scientific models 
 written in different programming languages. To combine two models,
 modelers add simple communications interfaces to the model code and
-provide simple declarative specification files that identfy the models
+provide simple declarative specification files that identify the models
 that should be run and the inputs and outputs those models expect.
 
-The system uses the specification file to configure the communications
+The system uses the specification files to configure the communications
 channels and expose them to the models. The complexity of the particular
-communications system is managed by the framework which performns
+communications system is managed by the framework, which performs
 communication setup, binds the communications to simple interfaces
 within the models, and manages execution of the models. The complexities
 of model registration and discovery, as well as the complexities of
@@ -20,19 +21,36 @@ communications protocols or translating models to the same programming
 language.
 
 Please refer to the package
-`documentation <https://cropsinsilico.github.io/cis_interface/>`__ for
+`documentation <https://cropsinsilico.github.io/yggdrasil/>`__ for
 additional information about the package and directions for installing
 it.
 
-.. |PyPI version| image:: https://badge.fury.io/py/cis_interface.svg
-   :target: https://badge.fury.io/py/cis_interface
-.. |Build Status| image:: https://travis-ci.org/cropsinsilico/cis_interface.svg?branch=master
-   :target: https://travis-ci.org/cropsinsilico/cis_interface
-.. |Build status| image:: https://ci.appveyor.com/api/projects/status/y9du52gefaw4ees9/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/langmm/cis-interface/branch/master
-.. |Coverage Status| image:: https://coveralls.io/repos/github/cropsinsilico/cis_interface/badge.svg?branch=master
-   :target: https://coveralls.io/github/cropsinsilico/cis_interface?branch=master
-.. |codecov| image:: https://codecov.io/gh/cropsinsilico/cis_interface/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/cropsinsilico/cis_interface
-.. |PEP8| image:: https://img.shields.io/badge/code%20style-pep8-orange.svg
+.. note:: yggdrasil was previously known as cis_interface. While cis_interface
+   can be installed from PyPI `here <https://pypi.org/project/cis-interface/>`__,
+   cis_interface will no longer be updated.
+
+If you use yggdrasil in your research, please cite the accompanying paper:
+
+
+    Meagan Lang, yggdrasil: a Python package for integrating computational models 
+    across languages and scales, in silico Plants, Volume 1, Issue 1, 2019, diz001, 
+    `https://doi.org/10.1093/insilicoplants/diz001 <https://doi.org/10.1093/insilicoplants/diz001>`__
+
+
+.. |tag version| image:: https://img.shields.io/github/tag-date/cropsinsilico/yggdrasil.svg?style=flat-square
+.. |PyPI version| image:: https://img.shields.io/pypi/v/yggdrasil-framework.svg?style=flat-square
+   :target: https://pypi.org/project/yggdrasil-framework
+.. |Travis Build Status| image:: https://img.shields.io/travis/cropsinsilico/yggdrasil/master.svg?style=flat-square
+   :target: https://travis-ci.org/cropsinsilico/yggdrasil
+.. |Appveyor Build status| image:: https://img.shields.io/appveyor/ci/langmm/yggdrasil.svg?style=flat-square
+   :target: https://ci.appveyor.com/project/langmm/yggdrasil/branch/master
+..
+   .. |Coverage Status| image:: https://coveralls.io/repos/github/cropsinsilico/yggdrasil/badge.svg?branch=master
+      :target: https://coveralls.io/github/cropsinsilico/yggdrasil?branch=master
+.. |codecov| image:: https://img.shields.io/codecov/c/github/cropsinsilico/yggdrasil/master.svg?style=flat-square
+   :target: https://codecov.io/gh/cropsinsilico/yggdrasil
+.. |PEP8| image:: https://img.shields.io/badge/code%20style-pep8-blue.svg?style=flat-square
    :target: https://www.python.org/dev/peps/pep-0008/
+.. |platform| image:: https://img.shields.io/conda/pn/conda-forge/yggdrasil.svg?color=magenta&label=conda%20platforms&style=flat-square
+   :target: https://anaconda.org/conda-forge/yggdrasil
+.. |license| image:: https://img.shields.io/pypi/l/yggdrasil-framework.svg?style=flat-square

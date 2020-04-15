@@ -3,26 +3,17 @@
 Configuration Files
 ###################
 
-Many components of the |cis_interface| framework's behavior can be controlled
-by options in the configuration file. When installed |cis_interface| creates
-a user config file called '.cis_interface.cfg' in your home directory. By
-editting the options in the user config file, you can customize the behavior
-of your framework runs.
+Many components of the |yggdrasil| framework's behavior can be controlled by options in the configuration file. When installed |yggdrasil| creates a user config file called '.yggdrasil.cfg' in your home directory or the direcotry associated with your conda or virtual environment (if you are using a conda or virtual environment). By editting the options in the user config file, you can customize the behavior of your framework runs. The exact location of your config file can be found by running::
 
-Further customization for specific runs can be
-achieved by creating a local config file called '.cis_interface.cfg' in the 
-directory where the interface will be run. Any options not found in the local
-will be filled in with values from the user config file. Any options not
-found in the user config file will be filled in with default package values.
+  $ yggconfig --show-file
+
+Further customization for specific runs can be achieved by creating a local config file called '.yggdrasil.cfg' in the directory where the interface will be run. Any options not found in the local will be filled in with values from the user config file. Any options not found in the user config file will be filled in with default package values.
 
 Debug Options
--------------
+=============
 
-Options for controlling the level of information printed during a run can be
-controlled by options in the '[debug]' section of the config files. Each one
-can have any of the valid
-`logging levels <https://docs.python.org/2/library/logging.html#levels>`_.
-These include:
+Options for controlling the level of information printed during a run can be controlled by options in the '[debug]' section of the config files. Each one can have any of the valid
+`logging levels <https://docs.python.org/2/library/logging.html#levels>`_. These include:
 
 * **NOTSET:** Do not print any messages.
 * **CRITICAL:** Print only messages logged as critical.
@@ -36,34 +27,123 @@ The debug options are:
 ======    =======    =================================================
 Option    Default    Description
 ======    =======    =================================================
-cis       INFO       Controls the level of messages printed by the
-                     |cis_interface| framework itself.
+ygg       INFO       Controls the level of messages printed by the
+                     |yggdrasil| framework itself.
 rmq       WARNING    Controls the level of messages printed by
 		     RabbitMQ.
 client    INFO       Controls the level of messages printed by
-                     |cis_interface| calls from the models.
+                     |yggdrasil| calls from the models.
 ======    =======    =================================================
 
 
-Windows Options
----------------
+Language Options
+================
 
-On Windows, it may be necessary for you to manually specify the location of
-the ``libzmq`` and ``czmq`` headers and libraries. These can be set using
-the following config options. This should not be necessary on Linux/OSX.
+Each supported language has a dedicated section in the config file with options that control how models of that language will be handled. The following options are available to all languages:
 
 ==============    ====================================================
 Option            Description
 ==============    ====================================================
-libzmq_include    Full path to the zmq.h header.
-libzmq_static     Full path to the zmq.lib static library.
-czmq_include      Full path to the czmq.h header.
-czmq_static       Full path to the czmq.lib static library.
+commtypes         A list of communication mechanisms types available
+                  for use in the language. If libraries are installed
+                  that later enable a new communication mechanism,
+                  running ``yggconfig`` will update this list.
+disable           A boolean determining if models in the specified
+                  language should be disabled. This option serves as a
+                  for isolating languages for testing.
 ==============    ====================================================
+
+Options available for all compiled languages include:
+
+==============    ====================================================
+Option            Description
+==============    ====================================================
+compiler          Name of, or full path to, the compiler that should 
+                  be used for compiling models.
+compiler_flags    A list of flags that should be used when calling the
+                  compiler.
+linker            Name of, or full path to, the linker that should be
+                  used for linking models (and the interface library).
+linker_flags      A list of flags that should be used when calling the
+                  linker.
+archiver          Name of, or full path to, the archiver that should
+                  be used for creating static interface libraries.
+archiver_flags    A list of flags that should be used when calling the
+                  archiver.
+==============    ====================================================
+
+Options available for all interpreted languages include:x
+
+=================    ====================================================
+Option               Description
+=================    ====================================================
+interpreter          Full path to the interpreter executable that should
+                     be used for running models.
+interpreter_flags    A list of flags that should be used when calling the
+                     interpreter.
+=================    ====================================================
+
+In addition to these general options, some languages also have specific 
+options related to their treatment of models or dependencies.
+
+C Options
+---------
+
+If they are not installed in a standard location or you would like to 
+use an alternate version than the one identified by |yggdrasil|, it may 
+be necessary for you to manually specify the location of dependency 
+headers and/or libraries. These can be set using the following config 
+options (with are also used to configure C++ model compilations).
+
+=================    ====================================================
+Option               Description
+=================    ====================================================
+rapidjson_include    Full path to the directory containing the rapidjson
+                     headers.
+zmq_include          Full path to the zmq.h header.
+zmq_static           Full path to the zmq.lib/libzmq.a static library.
+zmq_shared           Full path to the zmq.dll/libzmq.so/libzmq.dylib
+                     dynamic/shared object library.
+czmq_include         Full path to the czmq.h header.
+czmq_static          Full path to the czmq.lib static library.
+czmq_shared          Full path to the czmq.dll/libczmq.so/libczmq.dylib
+                     dynamic/shared object library.
+python_include       Full path to the Python.h header.
+python_static        Full path to the pythonX.X.lib/libpythonX.X.a
+                     static library.
+python_shared        Full path to the pythonX.X.dll/libpythonX.X.so/
+                     libpythonX.X.dylib dynamic/shared object library.
+c++_include          Full path to the stdlib.h C++ header.
+c++_static           Full path to the libc++.a static library.
+c++_shared           Full path to the libc++.so/libc++.dylib C++
+                     dynamic/shared object library.
+macos_sdkroot        Full path to the Mac SDK that should be used.
+=================    ====================================================
+
+Matlab Options
+--------------
+
+==================    ====================================================
+Option                Description
+==================    ====================================================
+startup_waittime_s    Time (in seconds) that should be waited for a
+                      Matlab shared engine to start before raising an
+                      error. On some systems this will need to be >10s in
+                      order to allow for long Matlab startup times.
+disable_engine        Boolean controling whether or not Matlab shared
+                      engines should be used to run models. This option is
+                      useful when debugging Matlab models as the shared
+                      engine, while reducing startup time, can result in
+                      orphaned processes for models that raise errors.
+matlabroot            The full path to the Matlab root directory. 
+version               The version of Matlab being used to run models. This
+                      option should only be set by |yggdrasil| and is only
+                      used to speedup reporting of the version.
+==================    ====================================================
 
 
 RabbitMQ Options
-----------------
+================
 
 Options in the '[RMQ]' section control the behavior of RabbitMQ connections.
 If the option is left blank, the default RabbitMQ option is used.
@@ -81,10 +161,10 @@ password     guest        RabbitMQ server password.
 
 
 Parallel Options
-----------------
+================
 
 Options in the '[parallel]' section control the behavior of parallelization.
-Although, not supported in the current version of |cis_interface|, these
+Although, not supported in the current version of |yggdrasil|, these
 include:
 
 =========    =======    ==============================================
